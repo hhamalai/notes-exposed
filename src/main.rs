@@ -3,11 +3,12 @@
 use std::str;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
+use std::path::{Path, PathBuf};
 use chrono::prelude::*;
 use nom::*;
-use std::collections::LinkedList;
+use std::env;
 use rocket_contrib::{Json};
-
+use rocket::response::NamedFile;
 
 
 #[macro_use] extern crate nom;
@@ -20,17 +21,27 @@ extern crate serde_json;
 
 
 
-#[get("/")]
-fn index() -> Json<LinkedList<Link>>  {
-    let file = File::open("file.txt");
-    let result = BufReader::new(file.unwrap()).lines().map(|line| {
+#[get("/api/notes")]
+fn notes() -> Json<Vec<Link>>  {
+    let file: String = match env::var("LINKBIN_INPUT_FILE") {
+        Ok(val) => val,
+        Err(_e) => String::from("file.txt"),
+    };
+    let file = File::open(file);
+    let mut result = BufReader::new(file.unwrap()).lines().map(|line| {
         let c = line.unwrap();
         match linkline(&c.as_bytes()[..]).unwrap() {
             (rest, date) if rest.starts_with(b"http") => Link { date: date, url: Some(str::from_utf8(rest).unwrap().clone().to_string()), comment: None },
             (rest, date) => Link { date: date, comment: Some(str::from_utf8(rest).unwrap().clone().to_string()), url: None }
         }
-    }).collect::<LinkedList<_>>();
+    }).collect::<Vec<_>>();
+    result.reverse();
     return Json(result)
+}
+
+#[get("/<file..>")]
+fn index(file: PathBuf) -> Option<NamedFile> {
+    NamedFile::open(Path::new("static/build/").join(file)).ok()
 }
 
 mod date_format {
@@ -87,6 +98,8 @@ named!(linkline <&[u8], Date<Utc>>, do_parse!(
 ));
 
 fn main() {
-    rocket::ignite().mount("/", routes![index]).launch();
+    rocket::ignite()
+        .mount("/", routes![index, notes])
+        .launch();
 }
 
