@@ -7,6 +7,6 @@ git:
 matrix:
   include:
   - language: rust
-    rust: stable
+    rust: nightly
     cache: cargo
     fast_finish: false
