@@ -10,3 +10,10 @@ matrix:
     rust: nightly
     cache: cargo
     fast_finish: false
+deploy:
+  provider: releases
+  api_key:
+    secure: i+mE4K5KBQOa2JpT3r2/3T3QysZ9TPIcW7P81RdSeQ236Ptwx08xleflaoSM9D62wDvZRYhZl8cTkKk0ZfzzW/D6nJIBH8+Y4bxClZBlxCb3KNihSiv5mhSCWjm9HDl4WVnb0V/Gbm5X3y7BABxhuwy2ADWD8nvl3XZi8rueqwM4M3UwkYLzgQ3VWU/PnNEMLDpw8simTZcaGCgIax83F51vQZGKWT7Jxe3R3gUTIKCzj1YeR6JXxRz0nTkZIEPl+Z7ruNDbAsXgQPTa67pYer3uxB0+6frsup+Y0h67NUia6dc0Bajkhxx6nIlmA85wis9bp/oeDcjbDtAQ64jQqiiceHT+L7kygs1mlBmI3Wuk1J3iTD4M/oZVvT2G5eYPlQU5q/nRuEYme4d0EEz7yfhQ3U8cA4kH7WIe6Ju/8n73oKzoJLpjl3Cr2LoxQP/ssLCXs9I2ZsCYNOI/83rvrP/QxgGLtUbHY7kqqqXt3EAQEJpR0YnU+5eLDNEh6Uy2/23/WWuXYvHZfJdXI+qTP97qByZMdWL/OijCSOX3WV7fEFp/tqcUweEGtt9gSQXoGU160nsF9rWiGAa9qQ93PP8M8vhJxjL3La0UsBSWx99VCaxYNYphLIyhrg0l2+f6U4v1aL3KVNjHeLyS+O0aI7eUiffqcrLtFXXv2Omyfqg=
+  file: target/release/linkbin
+  on:
+    repo: hhamalai/notes-exposed
